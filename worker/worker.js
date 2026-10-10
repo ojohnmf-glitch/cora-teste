@@ -32,7 +32,7 @@ export default {
     const up = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: { "content-type": "application/json", "x-api-key": env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" },
-      body: JSON.stringify({ model, max_tokens: 1500, stream: true, messages }),
+      body: JSON.stringify({ model, max_tokens: 6000, stream: true, messages }), // 6000: o modelo raciocina antes de falar e isso conta no limite; com 1500 a resposta chegava cortada
     });
     if (!up.ok) {
       const t = await up.text().catch(() => "");

@@ -1855,6 +1855,7 @@ function makeProxySample() {
         }
       }
     } catch (e) { if (e && e.name === "AbortError") throw { code: "cancelled", text }; throw e; }
+    if (buf.trim()) for (const line of buf.split("\n")) { if (!line.startsWith("data:")) continue; let ev; try { ev = JSON.parse(line.slice(5).trim()); } catch { continue; } if (ev.type === "content_block_delta" && ev.delta && ev.delta.type === "text_delta") text += ev.delta.text; }
     return { text, truncated: false };
   };
   fn.json = async (i, o) => JSON.parse((await fn(i, o)).text);
