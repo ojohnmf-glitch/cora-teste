@@ -1679,7 +1679,10 @@ function renderAjustes() {
       h("div", { class: "card" },
         h("p", null, `${compName()} é uma inteligência artificial para companhia e apoio emocional do dia a dia. Ela não é médica nem psicóloga e não chama socorro sozinha.`),
         h("p", null, "Em crise emocional: CVV, 188 (24 horas, gratuito) ou cvv.org.br. Emergência médica: SAMU, 192."),
-        !known() && !S.memories.length ? h("div", { class: "rowbtns" }, h("button", { class: "btn small ghost", type: "button", onclick: () => { exampleProfile(); renderAll(); toast("Exemplo carregado: Dona Cleusa."); } }, "Carregar um exemplo (a semana da Dona Cleusa)")) : null)));
+        h("div", { class: "rowbtns" },
+          h("button", { class: "btn small ghost", type: "button", onclick: () => loadExample("nini") }, "Carregar a conversa da Nini (2 dias)"),
+          h("a", { class: "btn small ghost", href: "registro-nini.html", target: "_blank", rel: "noopener" }, "Ler o registro da Nini"),
+          !known() && !S.memories.length ? h("button", { class: "btn small ghost", type: "button", onclick: () => { exampleProfile(); renderAll(); toast("Exemplo carregado: Dona Cleusa."); } }, "Carregar a Dona Cleusa") : null))));
 }
 function wipeAll() {
   S = blankState(); CHAT = { msgs: [] }; lsDel(LS_STATE); lsDel(LS_CHAT); started = false;
@@ -1860,6 +1863,16 @@ function makeProxySample() {
   fn.limits = async () => ({ images: false });
   return fn;
 }
+/* Exemplos carregáveis (ex.: a conversa da Nini): ?exemplo=nini busca exemplos/nini.json e substitui o que há no aparelho. */
+async function loadExample(name) {
+  try {
+    const r = await fetch("exemplos/" + name + ".json", { cache: "no-store" }); if (!r.ok) throw 0;
+    const d = await r.json();
+    S = d.state; ensure(); CHAT = d.chat && Array.isArray(d.chat.msgs) ? d.chat : { msgs: [] };
+    save("state"); save("chat"); started = false; renderAll(); toast("Exemplo carregado: " + name + ".");
+  } catch { toast("Não encontrei o exemplo \"" + name + "\"."); }
+}
+try { const ex = new URL(location.href).searchParams.get("exemplo"); if (ex && /^[a-z0-9-]+$/.test(ex)) { const u = new URL(location.href); u.searchParams.delete("exemplo"); history.replaceState(null, "", u.pathname + (u.search || "")); loadExample(ex); } } catch {}
 accessCode();
 sample = makeProxySample();
 sampleState = sample ? "ready" : "none";

@@ -94,3 +94,9 @@ Se precisar trocar, há um campo "Código de acesso do teste" em **Menu → Perf
 Cada mensagem manda a conversa recente mais as instruções da Cora (uns 3 a 5 mil tokens de entrada, 100 a 300 de saída).
 Com `claude-sonnet-5-5`, um dia de uso ativo (30 a 40 mensagens) fica na casa de centavos de dólar; confira na sua conta da Anthropic.
 Para gastar menos, mude `MODEL` para `claude-haiku-5-5` nas variáveis do Worker (respostas um pouco mais simples).
+
+## Registro de uso simulado
+
+`registro-nini.html` é a transcrição de dois dias de uso simulado no app publicado, com a Cora real respondendo
+(persona Nini, viúva, 70+). Para abrir o app já com essa conversa, memórias e caderno carregados:
+`https://SEU-USUARIO.github.io/cora-teste/?codigo=SEU-CODIGO&exemplo=nini` (ou Menu → Perfil e ajustes → "Carregar a conversa da Nini").
