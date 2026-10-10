@@ -288,7 +288,7 @@ form.card,.card{background:var(--surface);border:1px solid var(--line);border-ra
 .callbtn.help svg{color:#FF9A86}
 .call-bottom{position:absolute;left:0;right:0;bottom:0;padding:0 20px calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:10px;max-width:760px;margin:0 auto}
 .call .log{max-height:34vh;padding:4px 2px;-webkit-mask-image:linear-gradient(transparent,#000 24px);mask-image:linear-gradient(transparent,#000 24px)}
-.call.transcript .log{max-height:58vh;background:rgba(12,10,18,.5);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-radius:22px;padding:12px 14px;-webkit-mask-image:none;mask-image:none}
+.call.transcript .log{max-height:calc(100vh - 230px - env(safe-area-inset-bottom,0px));background:rgba(12,10,18,.5);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-radius:22px;padding:12px 14px;-webkit-mask-image:none;mask-image:none}
 .call .msg{max-width:100%}
 .call .msg.a .b{background:none;border:0;padding:0;color:#fff;font-size:clamp(1.25rem,4.4vw,1.6rem);line-height:1.42;text-shadow:0 1px 14px rgba(0,0,0,.65)}
 .call.transcript .msg.a .b{font-size:var(--t-m)}
@@ -323,7 +323,7 @@ form.card,.card{background:var(--surface);border:1px solid var(--line);border-ra
 .call .chip:hover,.call .chip:focus-visible{border-color:#FFB59E}
 .call .iconbtn[aria-pressed="true"]{background:rgba(255,154,134,.4)}
 .call .chip{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.25);color:#fff;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
-.call .modebtn{color:rgba(255,255,255,.7);font-weight:400;text-decoration:underline;align-self:flex-end;background:none;border:0;padding:2px 0;cursor:pointer;font-size:var(--t-xs)}
+.call .modebtn{color:#FFE3DA;font-weight:700;text-decoration:none;align-self:flex-end;background:rgba(255,142,124,.24);border:1px solid rgba(255,181,158,.55);border-radius:999px;padding:8px 14px;min-height:40px;cursor:pointer;font-size:var(--t-s);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 body.in-call .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 .menu-list{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden}
 .menu-list button{display:flex;align-items:center;gap:14px;padding:14px 16px;min-height:60px;background:none;border:0;border-top:1px solid var(--line);text-align:left;cursor:pointer;color:var(--fg)}
@@ -369,7 +369,7 @@ body.in-call .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
         </div>
       </div>
       <div class="call-bottom">
-        <button type="button" class="modebtn" id="modeBtn">ver a conversa escrita</button>
+        <button type="button" class="modebtn" id="modeBtn">Ler a conversa inteira</button>
         <div class="log" id="log" aria-live="polite"></div>
         <div class="chips" id="chips" aria-label="Assuntos para começar"></div>
         <form class="inputrow" id="composer">
@@ -1124,7 +1124,7 @@ function setPresence(on) {
   presence = on;
   $("#v-conversa").classList.toggle("presence", on);
   $("#v-conversa").classList.toggle("transcript", !on);
-  $("#modeBtn").textContent = on ? "ver a conversa escrita" : "fechar a conversa escrita";
+  $("#modeBtn").textContent = on ? "Ler a conversa inteira" : "Voltar para o rosto";
   try { sessionStorage.setItem("companheira_modo", on ? "rosto" : "texto"); } catch {}
   renderLog();
 }
@@ -1761,7 +1761,7 @@ function tickClock() {
   const el = $("#clock"); if (el) el.textContent = d.toLocaleDateString("pt-BR", { weekday: "long" }) + " · " + hhmm(d);
 }
 $("#modeBtn").addEventListener("click", () => setPresence(!presence));
-try { if (sessionStorage.getItem("companheira_modo") === "texto") { presence = false; $("#v-conversa").classList.remove("presence"); $("#v-conversa").classList.add("transcript"); $("#modeBtn").textContent = "fechar a conversa escrita"; } } catch {}
+try { if (sessionStorage.getItem("companheira_modo") === "texto") { presence = false; $("#v-conversa").classList.remove("presence"); $("#v-conversa").classList.add("transcript"); $("#modeBtn").textContent = "Voltar para o rosto"; } } catch {}
 $("#backBtn").addEventListener("click", () => show("conversa"));
 $("#menuBtn").addEventListener("click", openMenu);
 $("#ideasBtn").addEventListener("click", () => { chipsManual = $("#chips").hidden; chipsVisible(); });
@@ -1785,6 +1785,7 @@ function openMenu() {
   bg.append(h("div", { class: "sheet" },
     h("span", { class: "wordmark coral", style: "font-size:2.1rem" }, "cora"),
     h("div", { class: "menu-list" },
+      h("button", { type: "button", onclick: () => { close(); show("conversa"); started = true; setPresence(false); } }, h("span", { html: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg>' }), h("span", null, h("b", null, "Conversa inteira"), h("span", { class: "sub" }, "Ler tudo o que vocês já conversaram"))),
       item("caderno", I.caderno, "Meu caderno", S.notebook.length ? S.notebook.length + (S.notebook.length === 1 ? " receita ou história" : " receitas e histórias") : "Receitas e histórias que você contou"),
       item("lembretes", I.lembretes, "Lembretes", pend ? pend + (pend === 1 ? " pendente agora" : " pendentes agora") : "Remédios e compromissos"),
       item("memoria", I.memoria, "O que " + compName() + " lembra", "Tudo o que ela sabe sobre você. Dá para apagar"),
