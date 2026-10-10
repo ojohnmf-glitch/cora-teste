@@ -382,6 +382,7 @@ body.in-call .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
       </div>
     </section>
 
+    <section class="view" id="v-historico" hidden aria-label="Conversa inteira"></section>
     <section class="view" id="v-caderno" hidden aria-label="Meu caderno"></section>
     <section class="view" id="v-lembretes" hidden aria-label="Lembretes"></section>
     <section class="view" id="v-memoria" hidden aria-label="Memória"></section>
@@ -1392,6 +1393,24 @@ function renderLembretes() {
     h("div", { class: "section" }, h("h3", null, "Novo lembrete"), f));
 }
 
+/* ============ Conversa inteira (página própria, rolagem normal) ============ */
+function renderHistorico() {
+  const v = $("#v-historico");
+  const items = []; let lastDay = null;
+  for (const m of CHAT.msgs) {
+    if (m.r === "n" && m.kind === "safety") continue;
+    const dk = ymd(new Date(m.ts));
+    if (dk !== lastDay) { lastDay = dk; items.push(h("span", { class: "eyebrow", style: "display:block;margin-top:18px" }, dk === todayKey() ? "Hoje" : parseYmd(dk).toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" }))); }
+    if (m.r === "n") { items.push(h("div", { class: "notice" + (m.err ? " err" : ""), style: "align-self:center" }, m.t)); continue; }
+    items.push(h("div", { class: "msg " + m.r },
+      h("div", { class: "b" }, m.t || ""),
+      h("div", { class: "meta" }, m.r === "a" ? compName() : (known() || "Você"), " · ", fmtTime(m.ts), m.kind === "checkin" ? h("span", { class: "tag" }, "puxou assunto") : null, m.kind === "reminder" ? h("span", { class: "tag" }, "lembrete") : null)));
+  }
+  put(v,
+    h("div", { class: "panel-head" }, h("h2", null, "Conversa inteira"), h("p", null, CHAT.msgs.length ? "Tudo o que vocês já conversaram, do começo ao fim." : "Vocês ainda não conversaram.")),
+    h("div", { class: "section", style: "gap:12px" }, items));
+  v.scrollTop = 0;
+}
 /* ============ Caderno view ============ */
 let cadFilter = "todos";
 function notebookText(n) {
@@ -1748,7 +1767,7 @@ function show(vname) {
   document.body.classList.toggle("in-call", vname === "conversa");
   document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.v === vname));
   document.querySelectorAll(".view").forEach(s => (s.hidden = s.id !== "v-" + vname));
-  ({ caderno: renderCaderno, lembretes: renderLembretes, memoria: renderMemoria, familia: renderFamilia, ajustes: renderAjustes, conversa: renderLog })[vname]();
+  ({ historico: renderHistorico, caderno: renderCaderno, lembretes: renderLembretes, memoria: renderMemoria, familia: renderFamilia, ajustes: renderAjustes, conversa: renderLog })[vname]();
   try { sessionStorage.setItem("companheira_tab", vname); } catch {}
 }
 function renderAll() {
@@ -1760,8 +1779,8 @@ function tickClock() {
   const d = new Date();
   const el = $("#clock"); if (el) el.textContent = d.toLocaleDateString("pt-BR", { weekday: "long" }) + " · " + hhmm(d);
 }
-$("#modeBtn").addEventListener("click", () => setPresence(!presence));
-try { if (sessionStorage.getItem("companheira_modo") === "texto") { presence = false; $("#v-conversa").classList.remove("presence"); $("#v-conversa").classList.add("transcript"); $("#modeBtn").textContent = "Voltar para o rosto"; } } catch {}
+$("#modeBtn").addEventListener("click", () => show("historico"));
+
 $("#backBtn").addEventListener("click", () => show("conversa"));
 $("#menuBtn").addEventListener("click", openMenu);
 $("#ideasBtn").addEventListener("click", () => { chipsManual = $("#chips").hidden; chipsVisible(); });
@@ -1785,7 +1804,7 @@ function openMenu() {
   bg.append(h("div", { class: "sheet" },
     h("span", { class: "wordmark coral", style: "font-size:2.1rem" }, "cora"),
     h("div", { class: "menu-list" },
-      h("button", { type: "button", onclick: () => { close(); show("conversa"); started = true; setPresence(false); } }, h("span", { html: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg>' }), h("span", null, h("b", null, "Conversa inteira"), h("span", { class: "sub" }, "Ler tudo o que vocês já conversaram"))),
+      h("button", { type: "button", onclick: () => { close(); show("historico"); } }, h("span", { html: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg>' }), h("span", null, h("b", null, "Conversa inteira"), h("span", { class: "sub" }, "Ler tudo o que vocês já conversaram"))),
       item("caderno", I.caderno, "Meu caderno", S.notebook.length ? S.notebook.length + (S.notebook.length === 1 ? " receita ou história" : " receitas e histórias") : "Receitas e histórias que você contou"),
       item("lembretes", I.lembretes, "Lembretes", pend ? pend + (pend === 1 ? " pendente agora" : " pendentes agora") : "Remédios e compromissos"),
       item("memoria", I.memoria, "O que " + compName() + " lembra", "Tudo o que ela sabe sobre você. Dá para apagar"),
