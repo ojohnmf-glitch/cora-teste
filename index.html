@@ -1892,6 +1892,8 @@ async function loadExample(name) {
     save("state"); save("chat"); started = false; renderAll(); toast("Exemplo carregado: " + name + ".");
   } catch { toast("Não encontrei o exemplo \"" + name + "\"."); }
 }
+/* ?zerar=1 apaga tudo o que está no aparelho e começa do zero (útil para testar com outra pessoa). */
+try { const u0 = new URL(location.href); if (u0.searchParams.get("zerar")) { u0.searchParams.delete("zerar"); history.replaceState(null, "", u0.pathname + (u0.search || "")); wipeAll(); toast("Começando do zero."); } } catch {}
 try { const ex = new URL(location.href).searchParams.get("exemplo"); if (ex && /^[a-z0-9-]+$/.test(ex)) { const u = new URL(location.href); u.searchParams.delete("exemplo"); history.replaceState(null, "", u.pathname + (u.search || "")); loadExample(ex); } } catch {}
 accessCode();
 sample = makeProxySample();

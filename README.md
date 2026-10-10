@@ -100,3 +100,5 @@ Para gastar menos, mude `MODEL` para `claude-haiku-5-5` nas variáveis do Worker
 `registro-nini.html` é a transcrição de dois dias de uso simulado no app publicado, com a Cora real respondendo
 (persona Nini, viúva, 70+). Para abrir o app já com essa conversa, memórias e caderno carregados:
 `https://SEU-USUARIO.github.io/cora-teste/?codigo=SEU-CODIGO&exemplo=nini` (ou Menu → Perfil e ajustes → "Carregar a conversa da Nini").
+
+Para começar do zero num aparelho que já tem dados (ex.: depois de carregar a Nini): `…/cora-teste/?codigo=SEU-CODIGO&zerar=1`.

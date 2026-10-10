@@ -13,7 +13,7 @@ Leia o `README.md` para o passo a passo de infraestrutura.
 - `lume-chamada.jpg`, `cora-*.mp4` — rosto e vídeos (início, ouvindo, falando). O JS troca entre os vídeos por um mapa
   de poses (`VMAP`); não renomear.
 - `manifest.json`, `icone.png` — "Adicionar à tela de início".
-- `exemplos/nini.json` + `registro-nini.html` + `registro/` — registro de uso simulado (persona Nini); `?exemplo=nini` carrega no app via `loadExample()`.
+- `exemplos/nini.json` + `registro-nini.html` + `registro/` — registro de uso simulado (persona Nini); `?exemplo=nini` carrega no app via `loadExample()`; `?zerar=1` apaga tudo e começa do zero.
 - Deploy da página: push na `main` → GitHub Pages republica sozinho em 1–2 min em `https://ojohnmf-glitch.github.io/cora-teste/`.
 
 ## Como a conversa funciona
