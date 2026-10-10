@@ -1699,8 +1699,8 @@ function renderAjustes() {
         h("p", null, `${compName()} é uma inteligência artificial para companhia e apoio emocional do dia a dia. Ela não é médica nem psicóloga e não chama socorro sozinha.`),
         h("p", null, "Em crise emocional: CVV, 188 (24 horas, gratuito) ou cvv.org.br. Emergência médica: SAMU, 192."),
         h("div", { class: "rowbtns" },
-          h("button", { class: "btn small ghost", type: "button", onclick: () => loadExample("nini") }, "Carregar a conversa da Nini (2 dias)"),
-          h("a", { class: "btn small ghost", href: "registro-nini.html", target: "_blank", rel: "noopener" }, "Ler o registro da Nini"),
+          h("button", { class: "btn small ghost", type: "button", onclick: () => loadExample("nicolina") }, "Carregar a conversa da Nicolina (2 dias)"),
+          h("a", { class: "btn small ghost", href: "registro-nicolina.html", target: "_blank", rel: "noopener" }, "Ler o registro da Nicolina"),
           !known() && !S.memories.length ? h("button", { class: "btn small ghost", type: "button", onclick: () => { exampleProfile(); renderAll(); toast("Exemplo carregado: Dona Cleusa."); } }, "Carregar a Dona Cleusa") : null))));
 }
 function wipeAll() {
@@ -1885,6 +1885,7 @@ function makeProxySample() {
 }
 /* Exemplos carregáveis (ex.: a conversa da Nini): ?exemplo=nini busca exemplos/nini.json e substitui o que há no aparelho. */
 async function loadExample(name) {
+  if (name === "nini") name = "nicolina"; /* nome antigo do exemplo */
   try {
     const r = await fetch("exemplos/" + name + ".json", { cache: "no-store" }); if (!r.ok) throw 0;
     const d = await r.json();

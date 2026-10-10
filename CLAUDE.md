@@ -13,7 +13,7 @@ Leia o `README.md` para o passo a passo de infraestrutura.
 - `lume-chamada.jpg`, `cora-*.mp4` — rosto e vídeos (início, ouvindo, falando). O JS troca entre os vídeos por um mapa
   de poses (`VMAP`); não renomear.
 - `manifest.json`, `icone.png` — "Adicionar à tela de início".
-- `exemplos/nini.json` + `registro-nini.html` + `registro/` — registro de uso simulado (persona Nini); `?exemplo=nini` carrega no app via `loadExample()`; `?zerar=1` apaga tudo e começa do zero.
+- `exemplos/nicolina.json` + `registro-nicolina.html` + `registro/` — registro de uso simulado (persona Nicolina); `?exemplo=nicolina` carrega no app via `loadExample()`; `?zerar=1` apaga tudo e começa do zero.
 - Deploy da página: push na `main` → GitHub Pages republica sozinho em 1–2 min em `https://ojohnmf-glitch.github.io/cora-teste/`.
 
 ## Como a conversa funciona
@@ -25,7 +25,7 @@ Leia o `README.md` para o passo a passo de infraestrutura.
 - Estado fica só no `localStorage` do aparelho (`companheira_state_v1`, `companheira_chat_v1`). Não há servidor de dados.
 - Código de acesso chega por `?codigo=XXXX`, é guardado em `localStorage` (`cora_codigo`) e removido da URL.
 
-## Público e princípios de UX (ver histórico do teste com a persona "Nini")
+## Público e princípios de UX (ver histórico do teste com a persona "Nicolina")
 
 - Usuária 70+, conversadora, pouco interesse em tecnologia. Botões grandes, poucas decisões por tela, linguagem cotidiana.
 - Nunca usar na interface: avatar, interface, IA generativa, customizar, configurações avançadas. Dizer "a Cora", "guardar", "lembrar".
