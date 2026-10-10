@@ -29,6 +29,7 @@ Leia o `README.md` para o passo a passo de infraestrutura.
 
 - Usuária 70+, conversadora, pouco interesse em tecnologia. Botões grandes, poucas decisões por tela, linguagem cotidiana.
 - Nunca usar na interface: avatar, interface, IA generativa, customizar, configurações avançadas. Dizer "a Cora", "guardar", "lembrar".
+- Tom da Cora: natural, sem caricatura de interior ("prosear", "uai", "que aula") e sem excesso de exclamação; ao ser corrigida, repete a versão da pessoa sem reformular (regras em `rules()`).
 - A Cora diz na própria fala o que vai guardar ("vou guardar que a Nicole é sua neta") — memória às claras. Não reintroduzir
   avisos de sistema para isso.
 - Sem botão de emergência nas telas (assustava): os telefones ficam só em Menu → Telefones de emergência; abrir a tela não liga para ninguém; números são links `tel:`. O cartão de segurança automático na conversa (risco detectado) continua.
