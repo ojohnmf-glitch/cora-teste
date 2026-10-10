@@ -875,7 +875,7 @@ COMO VOCÊ CONVERSA
 - Escute antes de aconselhar. Valide o sentimento antes de propor qualquer coisa. Nunca trate um sentimento como bobeira.
 - Às vezes basta fazer companhia; não transforme tudo em tarefa.
 - Respeite a fé, os valores e o ritmo da pessoa.
-- Se a pessoa responder só "oi", "tudo bem" ou parecer sem saber o que dizer, ofereça em voz duas ou três opções concretas ("quer me contar do seu dia, me ensinar uma receita ou só prosear?").
+- Se a pessoa responder só "oi", "tudo bem" ou parecer sem saber o que dizer, ofereça em voz duas ou três opções concretas ("quer me contar do seu dia, me ensinar uma receita ou só conversar?").
 
 MEMÓRIA ÀS CLARAS
 - Quando for guardar algo importante que a pessoa acabou de contar (uma pessoa da vida dela, onde mora, saúde, uma data, uma preferência), diga de passagem na própria fala, com naturalidade, como uma amiga que anota: "deixa eu guardar que a Nicole é sua neta", "vou lembrar que você é de Montes Claros". Uma menção curta, no máximo uma por fala, e só para o que importa; miudezas você guarda sem comentar.
@@ -1288,7 +1288,7 @@ function beginConversation() {
 let chipsManual = null;
 function renderChips() {
   const chips = [
-    ["Só prosear", "Oi! Só queria conversar um pouco."],
+    ["Só conversar", "Oi! Só queria conversar um pouco."],
     ["Contar do meu dia", "Deixa eu te contar do meu dia."],
     ["Ensinar uma receita", "Quero te ensinar uma receita."],
     ["Contar uma história", "Deixa eu te contar uma história de antigamente."],
@@ -1310,19 +1310,19 @@ function remindersFor(k) {
 function reminderDone(rid) {
   const r = S.reminders.find(x => x.id === rid); const d = day();
   d.meds[rid] = { s: "feito", t: hhmm(new Date()) };
-  if (r) { delete r.snooze; CHAT.msgs.push({ id: uid8(), r: "a", t: r.tipo === "remedio" ? pick(["Isso! Anotadinho.", "Muito bem. Já marquei aqui.", "Ótimo, tá anotado."]) : "Combinado, marquei como feito.", ts: Date.now() }); }
+  if (r) { delete r.snooze; CHAT.msgs.push({ id: uid8(), r: "a", t: r.tipo === "remedio" ? pick(["Anotei.", "Certo, já marquei aqui.", "Anotado."]) : "Combinado, marquei como feito.", ts: Date.now() }); }
   save("state"); save("chat"); renderLog(); if (currentView === "lembretes") renderLembretes();
 }
 function reminderSnooze(rid) {
   const r = S.reminders.find(x => x.id === rid); if (!r) return;
   r.snooze = Date.now() + 15 * 60000; day().meds[rid] = { s: "adiado", t: hhmm(new Date()) };
-  CHAT.msgs.push({ id: uid8(), r: "a", t: "Tá bom, daqui a 15 minutinhos eu lembro de novo.", ts: Date.now() });
+  CHAT.msgs.push({ id: uid8(), r: "a", t: "Tá bom, daqui a 15 minutos eu lembro de novo.", ts: Date.now() });
   save("state"); save("chat"); renderLog();
 }
 function fireReminder(r) {
   const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
   const t = cap(r.tipo === "remedio"
-    ? pick([`${voc()}passando pra lembrar do remédio: ${r.text}. Já tomou?`, `${voc()}hora do remédio: ${r.text}. Tá aí pertinho?`])
+    ? pick([`${voc()}passando pra lembrar do remédio: ${r.text}. Já tomou?`, `${voc()}hora do remédio: ${r.text}. Já tomou?`])
     : pick([`${voc()}lembrete que a gente combinou: ${r.text}.`, `${voc()}não esquece: ${r.text}.`]));
   CHAT.msgs.push({ id: uid8(), r: "a", t, kind: "reminder", rid: r.id, ts: Date.now() });
   save("chat"); save("state"); renderLog(); if (started) speak(t);
@@ -1348,9 +1348,9 @@ function checkSilence() {
   d.checkins++; lastActivity = Date.now();
   const n = known(), p = periodo();
   const t = p === "tarde"
-    ? pick([`${n ? n + "? " : ""}A tarde tá tão quietinha... Quer prosear um pouco?`, `${n ? n + ", t" : "T"}ô por aqui. Como tá a tarde?`, `Lembrei de você${n ? ", " + n : ""}. O que tá fazendo agora?`])
-    : p === "manhã" ? pick([`${n ? n + ", c" : "C"}omo tá a manhã por aí?`, `E aí${n ? ", " + n : ""}, já tomou o cafezinho?`])
-    : pick([`${n ? n + ", c" : "C"}omo foi o dia hoje?`, `${n ? n + ", t" : "T"}ô aqui se quiser conversar antes de dormir.`]);
+    ? pick([`${n ? n + ", t" : "T"}ô por aqui. Como está a tarde?`, `Lembrei de você${n ? ", " + n : ""}. O que está fazendo agora?`, `${n ? n + ", a" : "A"} tarde está quieta por aí? Se quiser conversar, estou aqui.`])
+    : p === "manhã" ? pick([`${n ? n + ", c" : "C"}omo está a manhã por aí?`, `${n ? n + ", j" : "J"}á tomou café?`])
+    : pick([`${n ? n + ", c" : "C"}omo foi o dia hoje?`, `${n ? n + ", e" : "E"}stou aqui se quiser conversar antes de dormir.`]);
   CHAT.msgs.push({ id: uid8(), r: "a", t, kind: "checkin", ts: Date.now() });
   save("chat"); save("state"); renderLog(); speak(t);
 }
