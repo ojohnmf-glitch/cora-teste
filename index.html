@@ -349,7 +349,7 @@ body.in-call .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 <div class="app" id="app">
   <header class="topbar">
     <button type="button" class="backbtn" id="backBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Voltar para a conversa</button>
-    <div class="top-right"><span class="wordmark coral">cora</span><button type="button" class="helpbtn" id="helpBtn" aria-label="Emergência: telefones para ligar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>Emergência</button></div>
+    <div class="top-right"><span class="wordmark coral">cora</span></div>
   </header>
   <main>
     <section class="view call presence" id="v-conversa" aria-label="Conversa">
@@ -365,7 +365,6 @@ body.in-call .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
           <div class="status" id="status"><i></i><span>Por aqui</span></div>
         </div>
         <div class="call-actions">
-          <button type="button" class="callbtn glass help" id="callHelp" aria-label="Emergência: telefones para ligar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>Emergência</button>
           <button type="button" class="callbtn glass" id="menuBtn" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menu</button>
         </div>
       </div>
@@ -829,7 +828,7 @@ Você ainda não sabe: ${miss.join("; ")}.
 - Se a pessoa não quiser contar algo, respeite e mude de assunto.
 - Descubra o tratamento pelo jeito dela; se tiver dúvida, pergunte se prefere "você" ou "senhora/senhor".
 - Mais adiante, quando a relação já estiver boa, pode perguntar se ela quer te dar um nome.
-- A pessoa de confiança, só depois de algumas conversas: explique que é para deixar à mão no botão Ajuda, caso um dia precise.`;
+- A pessoa de confiança, só depois de algumas conversas: explique que fica à mão no menu, em Telefones de emergência, caso um dia precise.`;
 }
 function todayBlock() {
   const now = new Date(), k = todayKey(), d = day(k);
@@ -1211,7 +1210,7 @@ function safetyCard() {
 }
 function openHelp() {
   const bg = h("div", { class: "sheet-bg", role: "dialog", "aria-modal": "true", "aria-label": "Emergência" });
-  const close = () => { bg.remove(); document.removeEventListener("keydown", esc); $("#helpBtn").focus(); };
+  const close = () => { bg.remove(); document.removeEventListener("keydown", esc); $("#menuBtn").focus(); };
   const esc = e => { if (e.key === "Escape") close(); };
   bg.addEventListener("click", e => { if (e.target === bg) close(); });
   document.addEventListener("keydown", esc);
@@ -1600,7 +1599,7 @@ function profileForm(p, onSave, submitLabel, withConsent) {
     h("div", { class: "grid2" },
       fld("pFe", "Fé ou valores (opcional)", { value: p.fe || "" }),
       fld("pFam", "Familiar mais próximo", { value: p.familiar || "", placeholder: "Ex.: Márcia, filha" })),
-    fld("pContato", "Pessoa de confiança para uma hora difícil", { value: p.contato || "", placeholder: "Ex.: Márcia (filha) 11 91234-5678" }, "Aparece no botão Ajuda."),
+    fld("pContato", "Pessoa de confiança para uma hora difícil", { value: p.contato || "", placeholder: "Ex.: Márcia (filha) 11 91234-5678" }, "Aparece em Menu → Telefones de emergência."),
     fld("pComp", "Nome dela", { value: compName() }, "Pode dar o nome que quiser."),
     withConsent ? h("label", { class: "check" }, h("input", { type: "checkbox", id: "pOk", required: true }), h("span", null, "Entendo que este é um protótipo com inteligência artificial. Ele não substitui médico, psicólogo ou serviço de emergência. Em crise, ligo 188 (CVV) ou 192 (SAMU).")) : null,
     h("div", { class: "rowbtns" }, h("button", { class: "btn big", type: "submit" }, submitLabel)));
@@ -1758,11 +1757,9 @@ function tickClock() {
   const d = new Date();
   const el = $("#clock"); if (el) el.textContent = d.toLocaleDateString("pt-BR", { weekday: "long" }) + " · " + hhmm(d);
 }
-$("#helpBtn").addEventListener("click", openHelp);
 $("#modeBtn").addEventListener("click", () => setPresence(!presence));
 try { if (sessionStorage.getItem("companheira_modo") === "texto") { presence = false; $("#v-conversa").classList.remove("presence"); $("#v-conversa").classList.add("transcript"); $("#modeBtn").textContent = "fechar a conversa escrita"; } } catch {}
 $("#backBtn").addEventListener("click", () => show("conversa"));
-$("#callHelp").addEventListener("click", openHelp);
 $("#menuBtn").addEventListener("click", openMenu);
 $("#ideasBtn").addEventListener("click", () => { chipsManual = $("#chips").hidden; chipsVisible(); });
 function openMenu() {
@@ -1789,7 +1786,8 @@ function openMenu() {
       item("lembretes", I.lembretes, "Lembretes", pend ? pend + (pend === 1 ? " pendente agora" : " pendentes agora") : "Remédios e compromissos"),
       item("memoria", I.memoria, "O que " + compName() + " lembra", "Tudo o que ela sabe sobre você. Dá para apagar"),
       h("button", { type: "button", onclick: () => { close(); openHow(); } }, h("span", { html: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h.01"/></svg>' }), h("span", null, h("b", null, "Como funciona"), h("span", { class: "sub" }, "Ela me vê? Guarda tudo? Quem lê?"))),
-      item("ajustes", I.ajustes, "Perfil e ajustes", "Para a família: voz, dados e telefones")),
+      item("ajustes", I.ajustes, "Perfil e ajustes", "Para a família: voz, dados e telefones"),
+      h("button", { type: "button", onclick: () => { close(); openHelp(); } }, h("span", { html: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>' }), h("span", null, h("b", null, "Telefones de emergência"), h("span", { class: "sub" }, "CVV, SAMU e pessoa de confiança")))),
     h("p", { class: "fineprint" }, compName() + " não é uma pessoa: é um programa feito para fazer companhia. Não substitui médico nem psicólogo."),
     closeBtn));
   document.body.append(bg); closeBtn.focus();

@@ -30,13 +30,13 @@ Leia o `README.md` para o passo a passo de infraestrutura.
 - Nunca usar na interface: avatar, interface, IA generativa, customizar, configurações avançadas. Dizer "a Cora", "guardar", "lembrar".
 - A Cora diz na própria fala o que vai guardar ("vou guardar que a Nicole é sua neta") — memória às claras. Não reintroduzir
   avisos de sistema para isso.
-- "Emergência" (não "Ajuda"): abrir a tela não liga para ninguém; os números são links `tel:`.
+- Sem botão de emergência nas telas (assustava): os telefones ficam só em Menu → Telefones de emergência; abrir a tela não liga para ninguém; números são links `tel:`. O cartão de segurança automático na conversa (risco detectado) continua.
 - Entrada direta na conversa: nenhuma tela de configuração antes do primeiro "oi". Ajustes de voz ficam em Perfil e ajustes.
 - Limitações conhecidas e aceitas nesta versão: sem notificação com a página fechada; microfone é o do teclado do celular
   (o da página pode não abrir); Modo Família não está no menu.
 
 ## Checagens antes de dar push
 
-- Abrir `index.html` num navegador (pode ser via `python3 -m http.server`) e: tela inicial → Vamos conversar → menu → Emergência → O que Cora lembra, sem erro no console.
+- Abrir `index.html` num navegador (pode ser via `python3 -m http.server`) e: tela inicial → Vamos conversar → menu → Telefones de emergência → O que Cora lembra, sem erro no console.
 - Não colocar chave de API, código de acesso novo ou dados de testadores em arquivo nenhum do repositório.
 - Commits em português, curtos, dizendo o que mudou para a pessoa que testa.
